@@ -1,0 +1,272 @@
+CODE OF 1ST CNN MODEL FOR SMALL HOUSES:
+import os
+import numpy as np
+import matplotlib.pyplot as plt
+import tensorflow as tf
+from tensorflow.keras import layers
+from tensorflow.keras.models import Sequential
+data_dir = "Houses"
+print(os.listdir(data_dir))
+batch_size = 32
+img_height = 180
+img_width = 180
+train_ds =
+tf.keras.preprocessing.image_dataset_from_directory(
+ data_dir,
+ validation_split=0.2,
+ subset="training",
+ seed=123,
+ image_size=(img_height, img_width),
+ batch_size=batch_size
+)
+val_ds =
+tf.keras.preprocessing.image_dataset_from_directory(
+ data_dir,
+ validation_split=0.2,
+ subset="validation",
+ seed=123,
+ image_size=(img_height, img_width),
+ batch_size=batch_size
+)
+class_names = train_ds.class_names
+print(class_names)
+num_classes = len(class_names)
+model = Sequential([
+ layers.experimental.preprocessing.Rescaling(1./255,
+input_shape=(img_height, img_width, 3)),
+ layers.Conv2D(16, 3, padding='same', activation='relu'),
+ layers.MaxPooling2D(),
+ layers.Conv2D(32, 3, padding='same', activation='relu'),
+ layers.MaxPooling2D(),
+ layers.Conv2D(64, 3, padding='same', activation='relu'),
+ layers.MaxPooling2D(),
+ layers.Flatten(),
+ layers.Dense(128, activation='relu'),
+ layers.Dense(num_classes)
+])
+model.compile(optimizer='adam',
+
+loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logit
+s=True),
+ metrics=['accuracy'])
+model.summary()
+epochs = 10
+history = model.fit(
+ train_ds,
+ validation_data=val_ds,
+ epochs=epochs
+)
+# ... Rest of your code for predicting image age ...
+# Code for predicting image age
+test_image_path = "1991-2000-test2.jpg"
+# Preprocess the test image
+img =
+tf.keras.preprocessing.image.load_img(test_image_path,
+target_size=(img_height, img_width))
+x = tf.keras.preprocessing.image.img_to_array(img)
+x = np.expand_dims(x, axis=0)
+x = x / 255.0 # Normalize the image
+# Predict the age
+predictions = model.predict(x)
+predicted_class_index = np.argmax(predictions[0])
+predicted_class = class_names[predicted_class_index]
+confidence = predictions[0][predicted_class_index] * 100
+# Display the result
+plt.imshow(img)
+plt.title(f"Predicted class: {predicted_class}
+({confidence:.2f}% confidence)")
+plt.axis("off")
+plt.show()
+print("Predicted age:", predicted_class)
+2. CODE OF 2ND CUSTOM CNN MODEL FOR
+SKYSCRAPPERS AND APARTMENTS:
+!pip install tensorflow tensorflow-gpu==2.8.0 opencvpython matplotlib
+!pip list
+import tensorflow as tf
+import os
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
+import cv2
+from PIL import Image
+#-------------------------------------------------------
+folder_path = "SkyScrappers&Apartments"
+file_list = os.listdir(folder_path)
+# Filter out the '.ipynb_checkpoints' folder
+file_list = [file for file in file_list if file !=
+'.ipynb_checkpoints']
+# Print the remaining files
+for file in file_list:
+ print(file)
+data1 = os.listdir('SkyScrappers&Apartments/1901-1930')
+print(data1[0:5])
+print(data1[-5:])
+data2 = os.listdir('SkyScrappers&Apartments/1931-1960')
+print(data2[0:5])
+print(data2[-5:])
+data3 = os.listdir('SkyScrappers&Apartments/1961-1980')
+print(data3[0:5])
+print(data3[-5:])
+data4 = os.listdir('SkyScrappers&Apartments/1981-2000')
+print(data4[0:5])
+print(data4[-5:])
+data5 = os.listdir('SkyScrappers&Apartments/2001-2020')
+print(data5[0:5])
+print(data5[-5:])
+print('Number of images in data1:', len(data1))
+print('Number of images in data2:', len(data2))
+print('Number of images in data3:', len(data3))
+print('Number of images in data4:', len(data4))
+print('Number of images in data5:', len(data5))
+labels = data1 + data2 + data3 + data4 + data5
+print(len(labels))
+print(labels[0:5])
+print(labels[-5:])
+# displaying the image of 1st dataset
+# Read the image file
+img = mpimg.imread('SkyScrappers&Apartments/1901-
+1930/1900.jpg')
+# Display the image
+imgplot = plt.imshow(img)
+plt.show()
+# displaying the image of 2nd dataset
+img = mpimg.imread('SkyScrappers&Apartments/1931-
+1960/1958.jpg')
+imgplot = plt.imshow(img)
+plt.show()
+# convert images to numpy arrays
+data1_path = 'SkyScrappers&Apartments/1901-1930/'
+data1 = os.listdir(data1_path)
+images = []
+for img_file in data1:
+image = Image.open(data1_path + img_file)
+image = image.resize((128,128))
+image = image.convert('RGB')
+image = np.array(image)
+images.append(image)
+#---------------------------------------------------------------
+data2_path = 'SkyScrappers&Apartments/1931-1960/'
+data2 = os.listdir(data2_path)
+for img_file in data2:
+ if not img_file.endswith('.jpg'): # Skip non-image files
+ continue
+ image_path = os.path.join(data2_path, img_file)
+ image = Image.open(image_path)
+ image = image.resize((128,128))
+ image = image.convert('RGB')
+ image = np.array(image)
+ images.append(image)
+#---------------------------------------------------------------
+data3_path = 'SkyScrappers&Apartments/1961-1980/'
+data3 = os.listdir(data3_path)
+for img_file in data3:
+ if not img_file.endswith('.jpg'): # Skip non-image files
+ continue
+ image = Image.open(data3_path + img_file)
+ image = image.resize((128,128))
+ image = image.convert('RGB')
+ image = np.array(image)
+ images.append(image)
+#---------------------------------------------------------------
+data4_path = 'SkyScrappers&Apartments/1981-2000/'
+data4 = os.listdir(data4_path)
+for img_file in data4:
+ if not img_file.endswith('.jpg'): # Skip non-image files
+ continue
+ image = Image.open(data4_path + img_file)
+ image = image.resize((128,128))
+ image = image.convert('RGB')
+ image = np.array(image)
+ images.append(image)
+#---------------------------------------------------------------
+data5_path = 'SkyScrappers&Apartments/2001-2020/'
+data5 = os.listdir(data5_path)
+for img_file in data5:
+ if not img_file.endswith('.jpg'): # Skip non-image files
+ continue
+ image = Image.open(data5_path + img_file)
+ image = image.resize((128,128))
+ image = image.convert('RGB')
+ image = np.array(image)
+ images.append(image)
+type(images[0])
+# converting image list and label list to numpy arrays
+X = np.array(images)
+Y = np.array(labels)
+!pip install scikit-learn
+from sklearn.model_selection import train_test_split
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y,
+test_size=0.2, random_state=2)
+print(X.shape, X_train.shape, X_test.shape)
+# scaling the data
+X_train_scaled = X_train/255
+X_test_scaled = X_test/255
+import tensorflow as tf
+from tensorflow import keras
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Conv2D,
+MaxPooling2D, Dense, Flatten, Dropout
+model = Sequential()
+num_of_classes = 5
+model = keras.Sequential()
+model.add(keras.layers.Conv2D(32, kernel_size=(3,3),
+activation='relu', input_shape=(128,128,3)))
+model.add(keras.layers.MaxPooling2D(pool_size=(2,2)))
+model.add(keras.layers.Conv2D(64, kernel_size=(3,3),
+activation='relu'))
+model.add(keras.layers.MaxPooling2D(pool_size=(2,2)))
+model.add(keras.layers.Flatten())
+model.add(keras.layers.Dense(128, activation='relu'))
+model.add(keras.layers.Dropout(0.5))
+model.add(keras.layers.Dense(64, activation='relu'))
+model.add(keras.layers.Dropout(0.5))
+model.add(keras.layers.Dense(num_of_classes,
+activation='sigmoid'))
+# compile the neural network
+model.compile(optimizer='adam',
+
+loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logit
+s=True),
+ metrics=['accuracy'])
+model.summary()
+!pip install pandas
+# training the neural network
+history = model.fit(X_train_scaled, Y_train,
+validation_split=0.1, epochs=20)
+loss, accuracy = model.evaluate(X_test_scaled, Y_test)
+print('Test Accuracy =', accuracy)
+h = history
+# plot the loss value
+plt.plot(h.history['loss'], label='train loss')
+plt.plot(h.history['val_loss'], label='validation loss')
+plt.legend()
+plt.show()
+# plot the accuracy value
+plt.plot(h.history['accuracy'], label='Train Accuracy')
+plt.plot(h.history['val_accuracy'], label='Validation
+Accuracy')
+plt.legend()
+plt.show()
+input_image_path = input('Path of the image to be
+predicted: ')
+input_image = cv2.imread(input_image_path)
+input_image_rgb = cv2.cvtColor(input_image,
+cv2.COLOR_BGR2RGB)
+plt.imshow(input_image_rgb)
+plt.axis('off')
+plt.show()
+input_image_resized = cv2.resize(input_image, (128, 128))
+input_image_scaled = input_image_resized / 255
+input_image_reshaped = np.reshape(input_image_scaled,
+[1, 128, 128, 3])
+input_prediction = model.predict(input_image_reshaped)
+print(input_prediction)
+class_probabilities = np.mean(input_prediction, axis=0)
+print(class_probabilities)
+predicted_class = np.argmax(class_probabilities)
+print(predicted_class)
+class_labels = ['1901-1930', '1931-1960', '1961-1980',
+'1981-2000', '2001-2020']
+predicted_age_range = class_labels[predicted_class]
+print('The predicted age range of the building is:',
+predicted_age_range)
