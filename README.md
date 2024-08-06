@@ -26,6 +26,7 @@ Preprocessing: Images resized to 180x180 pixels, normalized, and split into trai
 Skyscrapers and Apartments Dataset:
 Source: Images of skyscrapers and apartments from various eras (e.g., 1901-1930, 1931-1960, etc.).
 Preprocessing: Images resized to 128x128 pixels, converted to RGB, and scaled. Labels for different eras are used for classification.
+
 **Models**
 CNN for Small Houses:
 
@@ -41,10 +42,14 @@ Convolutional Layers: Extract features.
 MaxPooling Layers: Reduce dimensions.
 Dense Layers with Dropout: Prevent overfitting.
 Training: Includes validation split and uses Adam optimizer. Performance metrics include accuracy and loss.
+
+
 **Implementation Details**
 Data Preparation: Images from both datasets are loaded, resized, and converted into numpy arrays. Data is split into training and testing sets, then scaled.
 Model Training: Models are trained using epochs with validation to monitor performance and avoid overfitting.
 Prediction: Models are used to predict the age of new building images by preprocessing them similarly and obtaining class probabilities.
+
+
 **Results**
 Accuracy: The CNNs demonstrate the ability to predict building ages with high accuracy, showing that deep learning can effectively capture age-related visual patterns.
 Keywords
